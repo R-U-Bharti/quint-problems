@@ -21,31 +21,38 @@
 
 </head>
 
-<body class="min-h-screen flex items-center justify-center text-white">
+<body class="min-h-screen text-white">
 
-    <a class="glass py-2 rounded-lg hover:bg-blue-500/70 px-4 fixed bottom-2 right-2" href="./index.html">Water Tank Problem</a>
+    <a class="glass py-2 rounded-lg hover:bg-blue-500/70 px-4 fixed bottom-2 right-2" href="./index.html">Water Tank
+        Problem</a>
 
-    <div class="flex flex-col w-full max-w-2xl">
-
-        <h1 class="text-2xl font-bold mb-6 text-center">
-            Max Profit Problem
-        </h1>
-
-        <div class="flex gap-3 justify-center">
-
-            <input id="input"
-                class="px-3 py-2 rounded bg-white/10 border border-white/20 w-[350px] focus:outline-none focus:ring-2 focus:ring-blue-500"
-                type="number" placeholder="Enter time unit" />
-
-            <button onclick="solve()" class="bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded">
-                Calculate
-            </button>
-
+    <div class="w-full flex gap-10">
+        <div class="">
+            <img src="./maxProfit.png" alt="" class="object-fill h-screen" srcset="">
         </div>
 
+        <div class="flex-1 flex-col w-full p-4">
 
-       <div id="result" class="mt-4 w-full flex flex-col gap-2 justify-center p-4 rounded-lg"></div>
+            <h1 class="text-2xl font-bold mb-6 text-center">
+                Max Profit Problem
+            </h1>
 
+            <div class="flex gap-3 justify-center">
+
+                <input id="input"
+                    class="px-3 py-2 rounded bg-white/10 border border-white/20 w-[350px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="number" placeholder="Enter time unit" />
+
+                <button onclick="solve()" class="bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded">
+                    Calculate
+                </button>
+
+            </div>
+
+
+            <div id="result" class="mt-4 w-full flex flex-col gap-2 justify-center p-4 rounded-lg"></div>
+
+        </div>
     </div>
 
 
@@ -55,59 +62,59 @@
         // It tries all combinations of building sequences using depth-first search.
         function maxProfit(n) {
 
-                // Each building type takes some time to build and gives a per-unit-time earning.
-                const buildings = [
-                    { name: "T", time: 5, earn: 1500 },
-                    { name: "P", time: 4, earn: 1000 },
-                    { name: "C", time: 10, earn: 2000 }
-                ]
+            // Each building type takes some time to build and gives a per-unit-time earning.
+            const buildings = [
+                { name: "T", time: 5, earn: 1500 },
+                { name: "P", time: 4, earn: 1000 },
+                { name: "C", time: 10, earn: 2000 }
+            ]
 
-                let maxEarning = 0
-                let solutions = []
+            let maxEarning = 0
+            let solutions = []
 
-                // Recursive DFS tries all build orders and tracks remaining time.
-                function dfs(timeLeft, earning, plan) {
+            // Recursive DFS tries all build orders and tracks remaining time.
+            function dfs(timeLeft, earning, plan) {
 
-                    // If we found a better profit, reset the solutions list.
-                    if (earning > maxEarning) {
-                        maxEarning = earning
-                        solutions = [{ ...plan }]
-                    }
-
-                    // If this combination ties the current best, record it too.
-                    else if (earning === maxEarning) {
-                        solutions.push({ ...plan })
-                    }
-
-                    // Try adding each building type if time allows.
-                    for (let b of buildings) {
-
-                        if (timeLeft >= b.time) {
-
-                            let remaining = timeLeft - b.time
-                            let gain = remaining * b.earn
-
-                            plan[b.name]++
-
-                            dfs(remaining, earning + gain, plan)
-
-                            // Backtrack before trying the next option.
-                            plan[b.name]--
-
-                        }
-
-                    }
-
+                // If we found a better profit, reset the solutions list.
+                if (earning > maxEarning) {
+                    maxEarning = earning
+                    solutions = [{ ...plan }]
                 }
 
-                dfs(n, 0, { T: 0, P: 0, C: 0 })
+                // If this combination ties the current best, record it too.
+                else if (earning === maxEarning) {
+                    solutions.push({ ...plan })
+                }
 
-                return {
-                    maxEarning,
-                    solutions
+                // Try adding each building type if time allows.
+                for (let b of buildings) {
+
+                    if (timeLeft >= b.time) {
+
+                        let remaining = timeLeft - b.time
+                        let gain = remaining * b.earn
+
+                        plan[b.name]++
+
+                        dfs(remaining, earning + gain, plan)
+
+                        // Backtrack before trying the next option.
+                        plan[b.name]--
+
+                    }
+
                 }
 
             }
+
+            dfs(n, 0, { T: 0, P: 0, C: 0 })
+
+            return {
+                maxEarning,
+                solutions
+            }
+
+        }
 
         function solve() {
             // Read the user-entered time budget.
