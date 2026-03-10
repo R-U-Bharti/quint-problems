@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Water Tank Problem</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+
+</head>
+
+<body class="min-h-screen flex items-center justify-center text-white">
+
+    <a class="glass py-2 rounded-lg hover:bg-blue-500/70 px-4 fixed bottom-2 right-2" href="./index.html">Water Tank Problem</a>
+
+    <div class="flex flex-col w-full max-w-2xl">
+
+        <h1 class="text-2xl font-bold mb-6 text-center">
+            Max Profit Problem
+        </h1>
+
+        <div class="flex gap-3 justify-center">
+
+            <input id="input"
+                class="px-3 py-2 rounded bg-white/10 border border-white/20 w-[350px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="number" placeholder="Enter time unit" />
+
+            <button onclick="solve()" class="bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded">
+                Calculate
+            </button>
+
+        </div>
+
+
+       <div id="result" class="mt-4 w-full flex flex-col gap-2 justify-center p-4 rounded-lg"></div>
+
+    </div>
+
+
+    <script>
+
+        function maxProfit(n) {
+
+                const buildings = [
+                    { name: "T", time: 5, earn: 1500 },
+                    { name: "P", time: 4, earn: 1000 },
+                    { name: "C", time: 10, earn: 2000 }
+                ]
+
+                let maxEarning = 0
+                let solutions = []
+
+                function dfs(timeLeft, earning, plan) {
+
+                    if (earning > maxEarning) {
+                        maxEarning = earning
+                        solutions = [{ ...plan }]
+                    }
+
+                    else if (earning === maxEarning) {
+                        solutions.push({ ...plan })
+                    }
+
+                    for (let b of buildings) {
+
+                        if (timeLeft >= b.time) {
+
+                            let remaining = timeLeft - b.time
+                            let gain = remaining * b.earn
+
+                            plan[b.name]++
+
+                            dfs(remaining, earning + gain, plan)
+
+                            plan[b.name]--
+
+                        }
+
+                    }
+
+                }
+
+                dfs(n, 0, { T: 0, P: 0, C: 0 })
+
+                return {
+                    maxEarning,
+                    solutions
+                }
+
+            }
+
+        function solve() {
+            
+            const time = parseInt(document.getElementById("input").value)
+
+            const { maxEarning, solutions } = maxProfit(time)
+
+            const resultDiv = document.getElementById("result")
+            resultDiv.classList.add("glass")
+            resultDiv.innerHTML = `<h2 class="text-xl font-semibold mb-4">Max Earning: $${maxEarning}</h2>`
+            solutions.forEach((sol, idx) => {
+                resultDiv.innerHTML += `<p class="mb-2">Plan ${idx + 1}: T=${sol.T}, P=${sol.P}, C=${sol.C}</p>`
+            })
+
+        }
+
+    </script>
+
+</body>
+
+</html>
