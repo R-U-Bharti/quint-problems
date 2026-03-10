@@ -51,8 +51,11 @@
 
     <script>
 
+        // This function computes the maximum possible earning given a time budget.
+        // It tries all combinations of building sequences using depth-first search.
         function maxProfit(n) {
 
+                // Each building type takes some time to build and gives a per-unit-time earning.
                 const buildings = [
                     { name: "T", time: 5, earn: 1500 },
                     { name: "P", time: 4, earn: 1000 },
@@ -62,17 +65,21 @@
                 let maxEarning = 0
                 let solutions = []
 
+                // Recursive DFS tries all build orders and tracks remaining time.
                 function dfs(timeLeft, earning, plan) {
 
+                    // If we found a better profit, reset the solutions list.
                     if (earning > maxEarning) {
                         maxEarning = earning
                         solutions = [{ ...plan }]
                     }
 
+                    // If this combination ties the current best, record it too.
                     else if (earning === maxEarning) {
                         solutions.push({ ...plan })
                     }
 
+                    // Try adding each building type if time allows.
                     for (let b of buildings) {
 
                         if (timeLeft >= b.time) {
@@ -84,6 +91,7 @@
 
                             dfs(remaining, earning + gain, plan)
 
+                            // Backtrack before trying the next option.
                             plan[b.name]--
 
                         }
@@ -102,13 +110,15 @@
             }
 
         function solve() {
-            
+            // Read the user-entered time budget.
             const time = parseInt(document.getElementById("input").value)
 
             const { maxEarning, solutions } = maxProfit(time)
 
             const resultDiv = document.getElementById("result")
             resultDiv.classList.add("glass")
+
+            // Show results, including all equivalent optimal plans.
             resultDiv.innerHTML = `<h2 class="text-xl font-semibold mb-4">Max Earning: $${maxEarning}</h2>`
             solutions.forEach((sol, idx) => {
                 resultDiv.innerHTML += `<p class="mb-2">Plan ${idx + 1}: T=${sol.T}, P=${sol.P}, C=${sol.C}</p>`
