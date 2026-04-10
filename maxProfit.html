@@ -66,14 +66,23 @@
             const buildings = [
                 { name: "T", time: 5, earn: 1500 },
                 { name: "P", time: 4, earn: 1000 },
-                { name: "C", time: 10, earn: 2000 }
+                { name: "C", time: 10, earn: 2000 },
+                { name: "M", time: 14, earn: 14000 }
             ]
 
             let maxEarning = 0
             let solutions = []
 
+            let memo={}
+
             // Recursive DFS tries all build orders and tracks remaining time.
             function dfs(timeLeft, earning, plan) {
+
+                  // ✅ Memo check (prune repeated states)
+                if (memo[timeLeft] !== undefined && memo[timeLeft] >= earning) {
+                    return;
+                }
+                memo[timeLeft] = earning;
 
                 // If we found a better profit, reset the solutions list.
                 if (earning > maxEarning) {
@@ -107,7 +116,7 @@
 
             }
 
-            dfs(n, 0, { T: 0, P: 0, C: 0 })
+            dfs(n, 0, { T: 0, P: 0, C: 0, M: 0 })
 
             return {
                 maxEarning,
@@ -128,7 +137,7 @@
             // Show results, including all equivalent optimal plans.
             resultDiv.innerHTML = `<h2 class="text-xl font-semibold mb-4">Max Earning: $${maxEarning}</h2>`
             solutions.forEach((sol, idx) => {
-                resultDiv.innerHTML += `<p class="mb-2">Plan ${idx + 1}: T=${sol.T}, P=${sol.P}, C=${sol.C}</p>`
+                resultDiv.innerHTML += `<p class="mb-2">Plan ${idx + 1}: T=${sol.T}, P=${sol.P}, C=${sol.C}, M=${sol.M}</p>`
             })
 
         }
